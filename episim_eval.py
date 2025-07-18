@@ -275,10 +275,10 @@ def run_sims(visits, snapshot_gap, beta, gamma, num_init,
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Evaluate shifts from generated temporal graphs.')
     parser.add_argument('--opath', type=str, 
-                        default='DATA/processed_data/shift1/all_unittypes_refined.csv',
+                        default='DATA/processed_data/shift2.0_10/all_unittypes_refined.csv',
                         help='Path to original data CSV file')
     parser.add_argument('--bpaths', type=str, nargs='+', 
-                        default=['Bipartite_TIGGER/results/shift1_addheads_fixlb/postpro_best/sampled_graph_0.csv'],
+                        default=['TBG/results/shift2.0_10/postpro_best/sampled_graph_0.csv'],
                         help='List of paths to generated data CSV files')
     parser.add_argument('--bnames', type=str, nargs='+', 
                         default=['bittigger'],
