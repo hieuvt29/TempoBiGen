@@ -109,13 +109,6 @@ if not Path(graph_label_map_path).exists():
 graph_label_to_id = pickle.load(open(graph_label_map_path, "rb"))
 
 id_to_graph_label = {v: k for k, v in graph_label_to_id.items()}
-# # Modify the keys of sampled_graphs
-# new_keys = {'label0': 0.0, 'label1': 1.0, 'label2': 2.0, 'label3': 3.0, 'label4': 4.0}
-# sampled_graphs = {new_keys[key]: sampled_graphs[key] for key in sampled_graphs.keys()}
-
-# # Save the modified sampled_graphs back to the file
-# with open(Path(config_path) / sampled_graphs_path, "wb") as f:
-#     pickle.dump(sampled_graphs, f)
 
 logging.info("Length of original and sampled,", len(original_graphs), len(sampled_graphs))
 commons = defaultdict(dict)
@@ -186,10 +179,6 @@ for metric in metrics_to_logs:
         nums[label].append(median_abs_error[label][metric])
 
 results_dict = {'median_abs_error': median_abs_error, 'mean_abs_error': mean_abs_error, 'actual_median': actual_graph_result}
-
-# Save results to JSON file
-# with open(Path(config_path) / sampled_graphs_path.replace('.pkl', '_metrics.json'), 'w') as json_file:
-#     json.dump(results_dict, json_file, indent=4)
 
 for label in median_abs_error.keys():
     with open(Path(config_path) / sampled_graphs_path.replace('.pkl', f'_utid_{id_to_graph_label[label]}_metrics.json'), 'w') as json_file:
