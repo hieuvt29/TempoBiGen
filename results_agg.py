@@ -106,17 +106,6 @@ if __name__ == "__main__":
                     all_samples_metrics[sample_idx] = metrics
             except:
                 pass
-            # mtm-alike
-            try:
-                fnames = glob.glob(os.path.join(result_dir, f"utid_{int(utid)}_refined_50_86400_sgraph*_metrics.json"))
-                for fname in fnames:
-                    print("reading ", fname)
-                    sample_idx = int(fname.split("_")[-2][6:])
-                    with open(fname, 'r') as f:
-                        metrics = json.load(f)
-                    all_samples_metrics[sample_idx] = metrics
-            except:
-                pass
             
             if len(all_samples_metrics) == 0:
                 print(f"No metrics found for {method_name} with utid {utid}")
@@ -126,7 +115,6 @@ if __name__ == "__main__":
 
       
     # compute average metrics over utids
-    # extract the actual mediab of the first method as a reference
     metric_groups = ['median_abs_error', 'mean_abs_error', 'actual_median']
     metrics_to_log = ['%_edge_overlap', 'd_mean', 'wedge_count', 'power_law_exp',
                     'rel_edge_distr_entropy', 'LCC', 'n_components', 
@@ -215,51 +203,3 @@ if __name__ == "__main__":
     print_metrics(avg_over_samples_metrics, std_over_samples_metrics, metrics_to_log)
     print("\n\n")
     print_metrics_as_latex(avg_over_samples_metrics, std_over_samples_metrics, metrics_to_log)
-    exit()
-
-    # create a table for wandb
-    
-    wandb.init(project="graph_metrics", name=f"Comparison_{args.data_name}")
-    for metric_group in ['median_abs_error', 'mean_abs_error']:
-        data = []
-        # create a normal table with all utids and methods
-        columns = ["utid", "method"] + metrics_to_log
-        for utid, methods_metric_values in avg_over_sampled_metrics.items():
-            for method, metrics in methods_metric_values.items():
-                row = [utid, method]
-                for metric in metrics_to_log:
-                    value = metrics[metric_group].get(metric, 'N/A')
-                    if isinstance(value, float):
-                        value = f"{value:.4f}"
-                    else:
-                        value = str(value)
-                    row.append(value)
-                data.append(row)
-        table = wandb.Table(data=data, columns=columns)
-        wandb.log({f"normal_table_{metric_group}": table})
-        # create a table with only the average metrics over utids
-        data = []
-        columns = ["method"] + metrics_to_log
-        for method, metrics in avg_over_utids_metrics.items():
-            row = [method]
-            for metric in metrics_to_log:
-                value = metrics[metric_group].get(metric, 'N/A')
-                if isinstance(value, float):
-                    value = f"{value:.4f}"
-                else:
-                    value = str(value)
-                row.append(value)
-            data.append(row)
-        table = wandb.Table(data=data, columns=columns)
-        wandb.log({f"avg_table_{metric_group}": table})
-        
-        # create a grouped bar chart
-        data = []
-        for utid, methods_metric_values in avg_over_sampled_metrics.items():
-            for method, metrics in methods_metric_values.items():
-                for metric, value in metrics[metric_group].items():
-                    data.append([f"{utid}~{method}", metric, np.round(value, 4)])
-        table = wandb.Table(data=data, columns=["utid_method", "metric", "value"])
-        wandb.log({f"group_table_{metric_group}": table})
-    
-    wandb.finish()
