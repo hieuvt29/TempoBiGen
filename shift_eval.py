@@ -440,16 +440,16 @@ def plot_duration_histograms(data, name, save_dir, picked_hids):
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Evaluate shifts from generated temporal graphs.')
     parser.add_argument('--opath', type=str, 
-                        default='DATA/processed_data/shift1/all_unittypes_refined.csv',
+                        default='DATA/processed_data/shift2.0_10/all_unittypes_refined.csv',
                         help='Path to original data CSV file')
     parser.add_argument('--bpaths', type=str, nargs='+', 
-                        default=['Bipartite_TIGGER/results/shift1_addheads_fixlb/postpro_best/sampled_graph_0.csv'],
+                        default=['TBG/results/shift2.0_10/postpro_best/sampled_graph_0.csv'],
                         help='List of paths to generated data CSV files')
     parser.add_argument('--bnames', type=str, nargs='+', 
                         default=['bittigger'],
                         help='List of names corresponding to the generated data CSV files')
     parser.add_argument('--data_dir', type=str,
-                        default='DATA/processed_data/shift1',
+                        default='DATA/processed_data/shift2.0_10',
                         help='Directory containing processed data files')
     parser.add_argument('--hid_to_jtid_path', type=str, 
                         default='DATA/hid_to_jtid_mapping.json',
@@ -491,9 +491,6 @@ if __name__ == '__main__':
     utids_10 = [v for v in map(int, "0 2 3 5 12 14 21 24 26 28 ".split())]
     utids_2 = [v for v in map(int, "0 2".split())]
     utids = utids_10
-    
-    # odata_path = 'DATA/processed_data/shift1/all_unittypes_refined.csv'
-    # bittigger_path = 'Bipartite_TIGGER/results/shift1_addheads_fixlb/postpro_best/sampled_graph_0.csv' 
     
     odata_path = args.opath
     bpaths = args.bpaths
