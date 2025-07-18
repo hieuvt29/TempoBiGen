@@ -290,27 +290,6 @@ def extract_original_snapshot_stats(data, one_day_window, min_t, max_t, undirect
 
     return target_daily_edge_counts, target_daily_node_counts, orig_daily_hcw_room_pairs
 
-def _check(hcw_std_graph, daily_hcw_room_pairs, undirected=True):
-    found_daily_pairs_check = defaultdict(set)
-    for hcw in hcw_std_graph:
-        for i in range(len(hcw_std_graph[hcw])):
-            room, cnt, start_time = hcw_std_graph[hcw][i][:3]
-            day_idx = start_time // one_day_window
-            found_daily_pairs_check[day_idx].add((hcw, room))
-    
-    target_daily_pairs = daily_hcw_room_pairs
-            
-    for start_time in range(min_t, max_t, one_day_window):
-        day_idx = start_time // one_day_window
-        if target_daily_pairs[day_idx] < found_daily_pairs_check[day_idx]:
-            logging.info("Mismatch in daily pairs for day_idx: ", day_idx)
-            logging.info(f"Target daily pairs ({len(target_daily_pairs[day_idx])}): ", target_daily_pairs[day_idx])
-            logging.info(f"Found daily pairs ({len(found_daily_pairs_check[day_idx])}): ", found_daily_pairs_check[day_idx])
-            return False, found_daily_pairs_check, target_daily_pairs
-        
-    return True, found_daily_pairs_check, target_daily_pairs
-
-
 
 def fuse_events(event_list, fuse_gap):
     '''
